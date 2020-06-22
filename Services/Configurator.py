@@ -5,6 +5,7 @@ from threading import Lock, Thread
 
 RndFileServiceConf = "RndFileServiceConf"
 SecureConf = "SecureConf"
+LoggerConf = "LoggerConf"
 
 __RelativeConfigPath = "Configs/"
 

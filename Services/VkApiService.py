@@ -1,5 +1,6 @@
 from .Configurator import GetConfig, SecureConf
 from .FileService import GetFileExtension, GetRndFileUseConf
+from .Logger import BeginLog, EndLog, Log, LogError, FormatException
 import json
 import requests
 import vk_api
@@ -58,11 +59,21 @@ def SubscribeToTypeEvent(TypeEvent, Clbk):
 
 def StartLongPool():
     for event in __LongPool.listen():
-        evType = event.type
-        if evType in __TypeEvents:
-            obj = LongPoolResponce(__GetDictObj(event.obj))
-            for clbk in __TypeEvents[evType]:
-                clbk(obj)
+        try:
+            BeginLog()
+            evType = event.type
+            Log(str(evType))
+            if evType in __TypeEvents:
+                Log(str(event.obj))
+                obj = LongPoolResponce(__GetDictObj(event.obj))
+                for clbk in __TypeEvents[evType]:
+                    clbk(obj)
+        except Exception as exc:
+            textEx = FormatException(exc)
+            LogError(textEx)
+        finally:
+            EndLog()
+            print("\n\n")
 
 
 def UploadPhotoOnStream(PhotoData):

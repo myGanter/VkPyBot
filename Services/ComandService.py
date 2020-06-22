@@ -1,4 +1,5 @@
 from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg
+from .Logger import Log, LogError
 from .FileService import GetFileExtension, GetRndFileUseConf
 from .SearchFacesApiService import UploadFile, Search
 import json
@@ -13,6 +14,7 @@ def __GetComands(Obj):
 
 def __GetPic(Obj):
     file = GetRndFileUseConf()
+    Log(file)
     fileStream = open(file, 'rb')
     photo = UploadPhotoOnStream(fileStream.raw)
     attachments = [ photo ]
@@ -22,6 +24,7 @@ def __GetPic(Obj):
 
 def __GetBidlos(Obj):
     uploadPhotoUri = Obj.GetUriFirstPhoto()
+    Log("Upload photo: " + uploadPhotoUri)
     if not uploadPhotoUri == "":
         photoResponce = requests.get(uploadPhotoUri)
         photoInfo = UploadFile(photoResponce.content)
