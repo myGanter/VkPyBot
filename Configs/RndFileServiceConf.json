@@ -1,0 +1,7 @@
+{
+    "RootDirs": [ 
+        "D:\\"
+    ],
+    "BanDirs": [ ],
+    "AllowedFiles": [ ".jpg", ".png" ]
+}
