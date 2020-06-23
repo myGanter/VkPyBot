@@ -48,7 +48,7 @@ def EndLog():
     now = datetime.datetime.now()
     now = str(now)  
     res += now + "\n"
-    file = open(__GetLogFile(), "a")
+    file = open(__GetLogFile(), "a", encoding="utf-8")
     file.write(res + __LogTextBoof + "\n\n\n")
     file.close()
     
