@@ -5,16 +5,19 @@ from vk_api.bot_longpoll import VkBotEventType
 
 
 def Main():
-    Log("Start app")
+    Log("Start app")    
     SubscribeToTypeEvent(VkBotEventType.MESSAGE_NEW, MessageNew)
     StartLongPool()
 
 
 def MessageNew(Obj):
     comandName = Obj.SplitComand()
-    Log(comandName)
+    Log("Comand: " + comandName)
     if ContainsComand(comandName):
-        GetComand(comandName)(Obj)  
+        GetComand(comandName)(Obj)
+    else:
+        Log("Start * comand")
+        GetComand("*")(Obj)
 
 
 if __name__ == '__main__':

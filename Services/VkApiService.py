@@ -21,6 +21,16 @@ class LongPoolResponce:
         self.Obj = Obj
 
 
+    def GetAudioMsgUri(self):
+        if len(self.Obj["message"]["attachments"]) > 0:
+            first = self.Obj["message"]["attachments"][0]
+            if "audio_message" in first:
+                lastSize = first["audio_message"]
+                return lastSize["link_mp3"]
+
+        return ""
+
+
     def GetMessage(self):
         return self.Obj["message"]["text"]  
         

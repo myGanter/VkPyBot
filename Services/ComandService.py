@@ -2,6 +2,7 @@ from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg
 from .Logger import Log, LogError
 from .FileService import GetFileExtension, GetRndFileUseConf
 from .SearchFacesApiService import UploadFile, Search
+from .WitAiService import SpeechRecognitionFromMediaData, SpeechResponse
 import json
 import requests 
 
@@ -10,6 +11,19 @@ __Session = requests.Session()
 
 def __GetComands(Obj):
     SendMsg("\n ".join(__Comands.keys()), Obj.GetPeerId())
+
+
+def __AllOther(Obj):
+    msgUri = Obj.GetAudioMsgUri()    
+    if not msgUri == "":
+        Log("Audio uri: " + msgUri)
+        msgStream = requests.get(msgUri)
+        speechResponseObj = SpeechRecognitionFromMediaData(msgStream.content)
+        text = speechResponseObj.GetText()
+        Log("Recognize text: " + text)
+        if text == "":
+            text = "..."
+        SendMsg(text, Obj.GetPeerId())
 
 
 def __GetPic(Obj):
@@ -56,5 +70,6 @@ def GetComand(ComandName):
 __Comands = {
     "get comands": __GetComands,
     "get pic": __GetPic,
-    "get bidlos": __GetBidlos
+    "get bidlos": __GetBidlos,
+    "*": __AllOther
 } 
