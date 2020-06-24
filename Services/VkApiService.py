@@ -94,6 +94,10 @@ def StartLongPool():
 def UploadVideoOnData(VideoData):
     recVS = __VkUser.method("video.save", { "is_private": True })
     recV = requests.post(recVS["upload_url"], files={ "video_file": VideoData }).json()
+    if "error" in recV:
+        Log("UploadVideoError: " + recV["error"])
+        return recV
+
     return 'video{}_{}'.format(recV['owner_id'], recV['video_id'])
 
 

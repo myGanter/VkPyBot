@@ -42,8 +42,13 @@ def __GetVideo(Obj):
     Log(file)
     fileStream = open(file, 'rb')
     video = UploadVideoOnData(fileStream.raw)
+    msg = "Держи"
     attachments = [ video ]
-    SendMsg("Держи", Obj.GetPeerId(), attachments)
+    if "error" in video:
+        msg = video["error"]
+        attachments = []
+
+    SendMsg(msg, Obj.GetPeerId(), attachments)
     fileStream.close()
 
 
