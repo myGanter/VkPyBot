@@ -1,8 +1,9 @@
-from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg
+from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg, UploadVideoOnData
 from .Logger import Log, LogError
-from .FileService import GetFileExtension, GetRndFileUseConf
+from .FileService import GetFileExtension, GetRndFileUseConfProfileName
 from .SearchFacesApiService import UploadFile, Search
 from .WitAiService import SpeechRecognitionFromMediaData, SpeechResponse
+from .Configurator import GetConfig, RndFileServiceConf
 import json
 import requests 
 
@@ -27,11 +28,21 @@ def __AllOther(Obj):
 
 
 def __GetPic(Obj):
-    file = GetRndFileUseConf()
+    file = GetRndFileUseConfProfileName("Pic")
     Log(file)
     fileStream = open(file, 'rb')
     photo = UploadPhotoOnStream(fileStream.raw)
     attachments = [ photo ]
+    SendMsg("Держи", Obj.GetPeerId(), attachments)
+    fileStream.close()
+
+
+def __GetVideo(Obj):
+    file = GetRndFileUseConfProfileName("Video")
+    Log(file)
+    fileStream = open(file, 'rb')
+    video = UploadVideoOnData(fileStream.raw)
+    attachments = [ video ]
     SendMsg("Держи", Obj.GetPeerId(), attachments)
     fileStream.close()
 
@@ -70,6 +81,7 @@ def GetComand(ComandName):
 __Comands = {
     "get comands": __GetComands,
     "get pic": __GetPic,
+    "get video": __GetVideo,
     "get bidlos": __GetBidlos,
     "*": __AllOther
 } 

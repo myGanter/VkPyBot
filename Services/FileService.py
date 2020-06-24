@@ -31,9 +31,9 @@ def __DiskObjWhere(Path, Predicate):
     return res        
 
 
-def GetRndFileUseConf():
+def GetRndFileUseConfProfileName(ProfileName):
     rndConf = GetConfig(RndFileServiceConf)
-    return GetRndFile(rndConf["RootDirs"], rndConf["AllowedFiles"], rndConf["BanDirs"])
+    return GetRndFile(rndConf["RootDirs"], rndConf["AllowedProfiles"][ProfileName], rndConf["BanDirs"])
 
 
 def GetRndFile(Dirs, Extensions, BanDirs):

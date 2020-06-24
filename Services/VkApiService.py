@@ -1,5 +1,4 @@
 from .Configurator import GetConfig, SecureConf
-from .FileService import GetFileExtension, GetRndFileUseConf
 from .Logger import BeginLog, EndLog, Log, LogError, FormatException
 import json
 import requests
@@ -9,6 +8,8 @@ from vk_api.utils import get_random_id
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 __VkSession = vk_api.VkApi(token=GetConfig(SecureConf)["ApiKey"])
+__VkUser = vk_api.VkApi(login=GetConfig(SecureConf)["Login"], password=GetConfig(SecureConf)["Password"], scope=140422623)
+__VkUser.auth()
 __Upload = VkUpload(__VkSession)
 __Vk = __VkSession.get_api()
 __LongPool = VkBotLongPoll(__VkSession, GetConfig(SecureConf)["GroupId"])
@@ -50,6 +51,10 @@ class LongPoolResponce:
         return self.Obj["message"]["peer_id"]
 
 
+    def GetFromId(self):
+        return self.Obj["message"]["from_id"]
+
+
     def GetUriFirstPhoto(self):
         if len(self.Obj["message"]["attachments"]) > 0:
             first = self.Obj["message"]["attachments"][0]
@@ -84,6 +89,12 @@ def StartLongPool():
         finally:
             EndLog()
             print("\n\n")
+
+
+def UploadVideoOnData(VideoData):
+    recVS = __VkUser.method("video.save", { "is_private": True })
+    recV = requests.post(recVS["upload_url"], files={ "video_file": VideoData }).json()
+    return 'video{}_{}'.format(recV['owner_id'], recV['video_id'])
 
 
 def UploadPhotoOnStream(PhotoData):

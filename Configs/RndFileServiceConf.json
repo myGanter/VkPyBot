@@ -1,7 +1,8 @@
 {
-    "RootDirs": [ 
-        "D:\\"
-    ],
+    "RootDirs": [ "D:\\" ],
     "BanDirs": [ ],
-    "AllowedFiles": [ ".jpg", ".png" ]
+    "AllowedProfiles": {
+        "Pic": [ ".jpg", ".png" ],
+        "Video": [ ".mp4", ".webm" ]
+    } 
 }

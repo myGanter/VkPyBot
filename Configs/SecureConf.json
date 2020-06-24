@@ -1,5 +1,7 @@
 {
     "ApiKey":"",
+    "Login":"",
+    "Password":"",
     "GroupId":"",
     "WitAiApiKey":""
 }
