@@ -1,11 +1,12 @@
-from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg, UploadVideoOnData
+from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg, UploadVideoOnData, GetVideoLen, GetVideo
 from .Logger import Log, LogError
 from .FileService import GetFileExtension, GetRndFileUseConfProfileName
 from .SearchFacesApiService import UploadFile, Search
 from .WitAiService import SpeechRecognitionFromMediaData, SpeechResponse
-from .Configurator import GetConfig, RndFileServiceConf
+from .Configurator import GetConfig, RndFileServiceConf, SecureConf
 import json
 import requests 
+import random
 
 __Session = requests.Session()
 
@@ -38,18 +39,49 @@ def __GetPic(Obj):
 
 
 def __GetVideo(Obj):
-    file = GetRndFileUseConfProfileName("Video")
-    Log(file)
-    fileStream = open(file, 'rb')
-    video = UploadVideoOnData(fileStream.raw)
+    args = Obj.SplitArgs()
     msg = "Держи"
-    attachments = [ video ]
-    if "error" in video:
-        msg = video["error"]
-        attachments = []
+    attachments = []
 
-    SendMsg(msg, Obj.GetPeerId(), attachments)
-    fileStream.close()
+    Log("Args: " + str(args))
+    if len(args) > 0:
+        Log("Get random video from vk")
+        conf = GetConfig(SecureConf)
+        videoOvner = ""
+        try:
+            if args[0] == "group":
+                videoOvner = -int(conf["GroupId"])
+            else:            
+                videoOvner = int(args[0])
+
+            lens = GetVideoLen(videoOvner)
+            Log("GetVideoLen: " + str(lens))
+            if lens > 0:
+                rndOffSet = random.randint(0, lens - 1)
+                video = GetVideo(videoOvner, rndOffSet)
+                Log("GetVideo: " + video)
+                attachments.append(video)
+            else:
+                msg = "Videos not found"
+                Log(msg)
+        except:
+            Log("Get random video from vk except")
+            SendMsg("Args not valid", Obj.GetPeerId())
+            raise            
+    else:
+        Log("Get random video from pc")
+        file = GetRndFileUseConfProfileName("Video")
+        Log(file)
+        fileStream = open(file, 'rb')
+        video = UploadVideoOnData(fileStream.raw)        
+        if "error" in video:
+            msg = video["error"]
+        else:
+            attachments.append(video)
+
+        fileStream.close()
+
+    SendMsg(msg, Obj.GetPeerId(), attachments)    
 
 
 def __GetBidlos(Obj):

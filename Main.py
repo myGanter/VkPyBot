@@ -12,10 +12,11 @@ def Main():
 
 def MessageNew(Obj):
     comandName = Obj.SplitComand()
-    Log("Comand: " + comandName)
+    Log("Msg: " + Obj.GetMessage())
     Log("FromId: " + str(Obj.GetFromId()))
     Log("PeerId: " + str(Obj.GetPeerId()))
     if ContainsComand(comandName):
+        Log("Comand: " + comandName)
         GetComand(comandName)(Obj)
     else:
         Log("Start * comand")

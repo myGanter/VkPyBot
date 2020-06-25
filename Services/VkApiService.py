@@ -38,13 +38,27 @@ class LongPoolResponce:
 
     def SplitComand(self):
         msg = self.GetMessage()
-        if len(msg) > 0:
+        if len(msg) > 0 and msg != "?":
+            msg = msg.split("?")[0]
+
             if msg[:1] == "[":
                 words = msg.split()
                 if len(words) > 1:
                     return " ".join(words[1:])
         
         return msg
+
+
+    def SplitArgs(self):
+        msg = self.GetMessage()
+        res = []
+        if "?" in msg:
+            args = msg.split("?")[1].split(" ")
+            for arg in args:
+                if not "" == arg:
+                    res.append(arg)
+
+        return res
 
 
     def GetPeerId(self):
@@ -89,6 +103,17 @@ def StartLongPool():
         finally:
             EndLog()
             print("\n\n")
+
+
+def GetVideoLen(OvnerId):
+    response = __VkUser.method("video.get", { "owner_id":OvnerId, "count":0, "offset":0 })
+    return response["count"]
+
+
+def GetVideo(OvnerId, Offset):
+    response = __VkUser.method("video.get", { "owner_id":OvnerId, "count":1, "offset":Offset })
+    video = response["items"][0]
+    return 'video{}_{}'.format(video['owner_id'], video['id'])
 
 
 def UploadVideoOnData(VideoData):
