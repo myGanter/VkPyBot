@@ -110,7 +110,7 @@ def __GetFtpClient(Host):
     if Host in __FtpClients:
         return __FtpClients[Host]
     else:
-        ftp = FtpClient(FTP(Host))
+        ftp = FtpClient(FTP(Host, timeout=10))
         __FtpClients[Host] = ftp
         ftp.Ftp.login()
         return ftp
@@ -162,7 +162,8 @@ def GetRndFile(Dirs, Extensions, BanDirs):
     if len(dirDirs) > 0:
         curDir = list(dirDirs.keys())[random.randint(0, len(dirDirs) - 1)]
         childDirs = dirDirs[curDir]
-        dirHistory.append(curDir)
+        if len(childDirs) > 1:
+            dirHistory.append(curDir)
 
         while len(dirDirs) > 0:
             if len(childDirs) > 0:
