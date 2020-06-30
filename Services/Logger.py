@@ -55,6 +55,8 @@ def EndLog():
     file = open(__GetLogFile(), "a", encoding="utf-8")
     file.write(res + __LogTextBoof + "\n\n\n")
     file.close()
+    if conf["DublicateToTerminal"]: 
+        print("\n\n")
     
 
 def FormatException(e):

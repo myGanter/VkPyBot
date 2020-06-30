@@ -102,7 +102,6 @@ def StartLongPool():
             LogError(textEx)
         finally:
             EndLog()
-            print("\n\n")
 
 
 def GetVideoLen(OvnerId):
