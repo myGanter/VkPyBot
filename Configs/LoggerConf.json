@@ -1,5 +1,6 @@
 {
     "MaxFileSizeKB": 1024,
     "LogsDir": "Logs\\",
-    "DublicateToTerminal": true
+    "DublicateToTerminal": true,
+    "LogOnlyErrors": true
 }

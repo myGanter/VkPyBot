@@ -1,6 +1,6 @@
 from Services.VkApiService import LongPoolResponce, UploadPhotoOnStream, SendMsg, UploadVideoOnData, GetVideoLen, GetVideo
 from .Logger import Log, LogError
-from .FileService import GetFileExtension, GetRndFileUseConfProfileName
+from .FileService import GetFileExtension, GetRndFileUseConfProfileName, GetFileStream
 from .SearchFacesApiService import UploadFile, Search
 from .WitAiService import SpeechRecognitionFromMediaData, SpeechResponse
 from .Configurator import GetConfig, RndFileServiceConf, SecureConf
@@ -31,11 +31,11 @@ def __AllOther(Obj):
 def __GetPic(Obj):
     file = GetRndFileUseConfProfileName("Pic")
     Log(file)
-    fileStream = open(file, 'rb')
-    photo = UploadPhotoOnStream(fileStream.raw)
+    (fileStream, o) = GetFileStream(file)
+    photo = UploadPhotoOnStream(fileStream)
     attachments = [ photo ]
     SendMsg("Держи", Obj.GetPeerId(), attachments)
-    fileStream.close()
+    o.close()
 
 
 def __GetVideo(Obj):
@@ -72,14 +72,14 @@ def __GetVideo(Obj):
         Log("Get random video from pc")
         file = GetRndFileUseConfProfileName("Video")
         Log(file)
-        fileStream = open(file, 'rb')
-        video = UploadVideoOnData(fileStream.raw)        
+        (fileStream, o) = GetFileStream(file)
+        video = UploadVideoOnData(fileStream)        
         if "error" in video:
             msg = video["error"]
         else:
             attachments.append(video)
 
-        fileStream.close()
+        o.close()
 
     SendMsg(msg, Obj.GetPeerId(), attachments)    
 

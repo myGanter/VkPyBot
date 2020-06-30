@@ -39,6 +39,10 @@ def LogError(Msg):
 
 
 def EndLog():
+    conf = GetConfig(LoggerConf)
+    if conf["LogOnlyErrors"] and __Error == False:
+        return
+
     res = ""
     if __Error:
         res += "[-] "
